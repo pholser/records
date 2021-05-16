@@ -27,10 +27,15 @@
    str/trim
    normalize-email
    normalize-favorite-color
-   str/trim])
+   normalize-birthdate])
    
 (defn record-split [raw delimiter]
   (str/split raw delimiter 5))
+
+(defn line->record [line delimiter]
+  (->> (record-split line delimiter)
+    (map #(%1 %2) normalizers)
+    (apply ->Record)))
 
 (defn -main
   "I don't do a whole lot ... yet."
