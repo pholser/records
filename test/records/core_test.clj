@@ -2,6 +2,9 @@
   (:require [clojure.test :refer :all]
             [records.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest split-record-csv
+  (testing "successful CSV splitting"
+    (is (= ["Doe" "John" "jdoe@example.com" "Blue" "19700228 "]
+           (split-record
+	     "Doe,John, jdoe@example.com  ,Blue, 19700228 "
+	     #"\s*,\s*")))))
