@@ -43,3 +43,14 @@
   (testing "should not regard casing"
     (is (= "blue" (normalize-favorite-color " BlUE   ")))))
 
+(deftest legitimate-iso-birthdate
+  (testing "when everything is as expected"
+    (is (= (java.time.LocalDate/parse "1970-04-21")
+           (normalize-birthdate "1970-04-21")))))
+
+(deftest illegitimate-iso-birthdate
+  (testing "when date cannot be parsed"
+    (is (thrown?
+         java.time.format.DateTimeParseException
+	 (normalize-birthdate "1970-04-**")))))
+
