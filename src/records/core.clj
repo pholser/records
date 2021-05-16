@@ -1,7 +1,8 @@
 (ns records.core
   (:gen-class)
   (:require [clojure.string :as str])
-  (:import (javax.mail.internet InternetAddress)))
+  (:import (javax.mail.internet InternetAddress)
+           (java.time LocalDate)))
 
 (defrecord Record
   [last-name first-name email favorite-color birthdate])
@@ -16,6 +17,11 @@
 (defn normalize-favorite-color [color]
   (str/lower-case (str/trim color)))
 
+(defn normalize-birthdate [birthdate]
+  (->> birthdate
+    (str/trim)
+    (LocalDate/parse)))
+    
 (def normalizers
   [str/trim
    str/trim
