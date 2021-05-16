@@ -1,6 +1,7 @@
 (ns records.core
   (:gen-class)
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io])
   (:import (javax.mail.internet InternetAddress)
            (java.time LocalDate)))
 
@@ -36,6 +37,17 @@
   (->> (record-split line delimiter)
     (map #(%1 %2) normalizers)
     (apply ->Record)))
+
+;; Thanks to https://www.rosettacode.org/wiki/Extract_file_extension
+(defn file-extension [s]
+  (second (re-find #"\.([a-zA-Z0-9]+)$" s)))
+
+(def suffix->delimiter {:txt #"\s+" :csv #"," :pipe #"[|]"})
+
+(defn file->records [filename]
+  (let [delim (suffix->delimiter (keyword (file-extension filename)))]
+    (with-open [f (io/reader filename)]
+      (map #(line->record %1 delim) (doall (line-seq f))))))
 
 (defn -main
   "I don't do a whole lot ... yet."

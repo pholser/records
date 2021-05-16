@@ -17,7 +17,7 @@
 	     #"[|]")))))
 
 (deftest split-record-spaces
-  (testing "successful spacee splitting"
+  (testing "successful space splitting"
     (is (= ["Doe" "John" "jdoe@example.com" "Blue" "1970-02-28  "]
            (record-split
 	     "Doe  John   jdoe@example.com   Blue\t\t1970-02-28  "
@@ -54,3 +54,38 @@
          java.time.format.DateTimeParseException
 	 (normalize-birthdate "1970-04-**")))))
 
+(deftest csv-line->record
+  (testing "successful CSV line to record"
+    (is (= (->Record
+             "Doe"
+	     "John"
+	     "jdoe@example.com"
+	     "blue"
+	     (java.time.LocalDate/parse "1970-02-28"))
+           (line->record
+	     "Doe,John, jdoe@example.com  ,Blue, 1970-02-28 "
+	     #",")))))
+
+(deftest pipe-line->record
+  (testing "successful pipe line to record"
+    (is (= (->Record
+             "Doe"
+	     "John"
+	     "jdoe@example.com"
+	     "blue"
+	     (java.time.LocalDate/parse "1970-02-28"))
+           (line->record
+	     "Doe | John| jdoe@example.com  |Blue|1970-02-28  "
+	     #"[|]")))))
+
+(deftest spaces-line->record
+  (testing "successful space line to record"
+    (is (= (->Record
+             "Doe"
+	     "John"
+	     "jdoe@example.com"
+	     "blue"
+	     (java.time.LocalDate/parse "1970-02-28"))
+           (line->record
+	     "Doe  John   jdoe@example.com   Blue\t\t1970-02-28  "
+	     #"\s+")))))
