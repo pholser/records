@@ -39,3 +39,7 @@
          javax.mail.internet.AddressException
 	 (normalize-email "asdfsadfasdfsadf@!#!SADDASDAS")))))
 
+(deftest normalizing-color
+  (testing "should not regard casing"
+    (is (= "blue" (normalize-favorite-color " BlUE   ")))))
+
