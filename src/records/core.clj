@@ -6,7 +6,7 @@
 (defrecord Record
   [last-name first-name email favorite-color birthdate])
 
-(defn split-record [raw delimiter]
+(defn record-split [raw delimiter]
   (str/split raw delimiter 5))
 
 (defn -main
