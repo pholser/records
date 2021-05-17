@@ -1,6 +1,24 @@
 (ns records.core-test
   (:require [clojure.test :refer :all]
-            [records.core :refer :all]))
+            [clojure.java.io :as io]
+            [records.core :refer :all]
+	    [talltale.core :as tt]))
+
+(defn generate-record []
+  (let [p (tt/person)
+        c (tt/color)]
+    (->Record (:last-name p)
+              (:first-name p)
+	      (:email p)
+	      c
+	      (:date-of-birth p))))
+
+(defn generate-record-file [filename delimiter count]
+  (with-open [f (io/writer filename)]
+    (doall
+      (repeatedly count
+        #(.write f
+	         (str (record->line (generate-record) delimiter) "\n"))))))
 
 (deftest split-record-csv
   (testing "successful CSV splitting"
@@ -89,3 +107,4 @@
            (line->record
 	     "Doe  John   jdoe@example.com   Blue\t\t1970-02-28  "
 	     #"\s+")))))
+

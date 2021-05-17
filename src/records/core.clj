@@ -38,6 +38,11 @@
     (map #(%1 %2) normalizers)
     (apply ->Record)))
 
+(defn record->line [record delimiter]
+  (->> (map #(%1 record)
+            [:last-name :first-name :email :favorite-color :birthdate])
+       (str/join delimiter)))
+
 ;; Thanks to https://www.rosettacode.org/wiki/Extract_file_extension
 (defn file-extension [s]
   (second (re-find #"\.([a-zA-Z0-9]+)$" s)))
