@@ -1,7 +1,8 @@
 (ns records.core
   (:gen-class)
   (:require [clojure.string :as str]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+	    [java-time :as time])
   (:import (javax.mail.internet InternetAddress)
            (java.time LocalDate)))
 
@@ -43,6 +44,15 @@
             [:last-name :first-name :email :favorite-color :birthdate])
        (str/join delimiter)))
 
+(defn record->display [record delimiter]
+  (->> (map #(%1 record)
+            [:last-name
+	     :first-name
+	     :email
+	     :favorite-color
+	     #(time/format "M/d/yyyy" (:birthdate %1))])
+       (str/join delimiter)))
+
 ;; Thanks to https://www.rosettacode.org/wiki/Extract_file_extension
 (defn file-extension [s]
   (second (re-find #"\.([a-zA-Z0-9]+)$" s)))
@@ -55,6 +65,24 @@
       (map #(line->record %1 delim) (doall (line-seq f))))))
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Read files named in command line args, sort and print"
   [& args]
-  (println "Hello, World!"))
+  (let [recs
+          (mapcat file->records args)
+        color-then-last-ascending
+	  (sort-by (juxt :favorite-color :last-name) recs)
+	birthdate-ascending
+	  (sort-by :birthdate recs)
+	last-descending
+	  (reverse (sort-by :last-name recs))]
+    (println "Output 1 - by favorite color then last name ascending:")
+    (println "=====")
+    (doseq [r color-then-last-ascending] (println (record->display r ",")))
+    (println)
+    (println "Output 2 - by birth date ascending:")
+    (println "=====")
+    (doseq [r birthdate-ascending] (println (record->display r ",")))
+    (println)
+    (println "Output 3 - by last name descending:")
+    (println "=====")
+    (doseq [r last-descending] (println (record->display r ",")))))

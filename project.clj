@@ -5,6 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [javax.mail/mail "1.4.3"]
+                 [clojure.java-time "0.3.2"]
 		 [talltale "0.4.3"]]
   :main ^:skip-aot records.core
   :target-path "target/%s"
