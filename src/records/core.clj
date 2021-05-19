@@ -68,13 +68,13 @@
   "Read files named in command line args, sort and print"
   [& args]
   (let [recs
-          (mapcat file->records args)
+         (mapcat file->records args)
         color-then-last-ascending
-	  (sort-by (juxt :favorite-color :last-name) recs)
+	 (sort-by (juxt :favorite-color :last-name) recs)
 	birthdate-ascending
-	  (sort-by :birthdate recs)
+	 (sort-by :birthdate recs)
 	last-descending
-	  (reverse (sort-by :last-name recs))]
+	 (reverse (sort-by :last-name recs))]
     (println "Output 1 - by favorite color then last name ascending:")
     (println "=====")
     (doseq [r color-then-last-ascending] (println (record->display r ",")))
